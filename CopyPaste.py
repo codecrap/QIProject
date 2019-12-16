@@ -68,6 +68,8 @@ ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
 plt.show()
 
+plt.clf()
+
 #The smallest paramters and the expectation can be extracted
 print('\n --- OPTIMAL PARAMETERS --- \n')
 print('The maximal expectation value is:  M1 = %.03f' % np.amax(F1))
@@ -130,7 +132,8 @@ QAOA_results = simulate.result()
 
 plot_histogram(QAOA_results.get_counts(),figsize = (8,6),bar_labels = False)
 
-
+plt.savefig('Simulator_counts_1.png')
+plt.clf()
 
 # Evaluate the data from the simulator
 counts = QAOA_results.get_counts()
@@ -165,6 +168,9 @@ print('The approximate solution is x* = %s with C(x*) = %d \n' % (max_C[0],max_C
 print('The cost function is distributed as: \n')
 plot_histogram(hist,figsize = (8,6),bar_labels = False)
 
+plt.savefig('Simulator_counts_2.png')
+plt.clf()
+
 
 
 # Use the IBMQ essex device
@@ -178,6 +184,9 @@ job_monitor(job_exp)
 
 exp_results = job_exp.result()
 plot_histogram(exp_results.get_counts(),figsize = (10,8),bar_labels = False)
+
+plt.savefig('Essex_counts_1.png')
+plt.clf()
 
 
 
@@ -213,3 +222,6 @@ print('The sampled mean value is M1_sampled = %.02f while the true value is M1 =
 print('The approximate solution is x* = %s with C(x*) = %d \n' % (max_C[0],max_C[1]))
 print('The cost function is distributed as: \n')
 plot_histogram(hist,figsize = (8,6),bar_labels = False)
+
+plt.savefig('Essex_counts_2.png')
+plt.clf()
