@@ -17,6 +17,10 @@ from qiskit.providers.ibmq      import least_busy
 from qiskit.tools.monitor       import job_monitor
 from qiskit.visualization import plot_histogram
 
+from sympy import Symbol, Matrix, init_printing, pprint, sin, cos, simplify, pi, zeros, lambdify
+from sympy.physics.quantum import TensorProduct as TP
+from sympy.physics.quantum.dagger import Dagger as Dag
+
 
 class Graph():
     def __init__(self):
@@ -29,10 +33,17 @@ class Graph():
 
         self.G = nx.Graph()
         self._Assign()
+        print('Assign')
         self._Degree()
+        print('Degree')
+        self._F()
+        print('F')
         self._Evaluate_F()
+        print('Eval_F')
         self._Grid()
+        print('Grid')
         self._Build()
+        print('Build')
 
     #Assign nodes and edges to the graph
     def _Assign(self):
@@ -81,8 +92,73 @@ class Graph():
         a = self.deg2
         b = self.deg4
 
-        #Expectation value for a edges of degree 2 and b edges of degree 4
-        self.F1 = a*self._fA(a_gamma, a_beta) + b*self._fB(a_gamma, a_beta)
+        #Expectation value
+        self.F1 = self.F(a_beta, a_gamma)
+
+        #a*self._fA(a_gamma, a_beta) + b*self._fB(a_gamma, a_beta)
+
+
+    def _F(self):
+
+        b = Symbol('b')
+        g = Symbol('g')
+
+        Id = Matrix([[1,0],
+            [0,1]])
+
+        Z = Matrix([[1,0],
+            [0,-1]])
+
+        X = Matrix([[0,1],
+            [1,0]])
+
+        H = zeros(2**self.n)
+
+        for e in self.E:
+            i = 1
+            a = Id
+            if e[0] == 0 or e[1] == 0:
+                c = Z
+            else:
+                c = Id
+            while i < self.n:
+                a = TP(a, Id)
+                if e[0] == i or e[1] == i:
+                    c = TP(c,Z)
+                else:
+                    c = TP(c,Id)
+                i +=1
+            H += 1/2*(a-c)
+
+        i = 0
+        B = zeros(2**self.n)
+
+        while i < self.n:
+            k = 0
+            while k < self.n:
+                if k == 0 and i == 0:
+                    d = X
+                elif k == 0 and i != 0:
+                    d = Id
+                elif k < i or k > i:
+                    d = TP(d,Id)
+                elif k == i:
+                    d = TP(d,X)
+                k += 1
+            i += 1
+            B += d
+
+        Pl = Matrix([1,1,1,1,1,1,1,1])/(8**(1/2))
+
+        Eh = (-1j*g*H).exp()
+        Ex = (-1j*b*B).exp()
+
+        Psi = Ex * Eh * Pl
+        F = (Dag(Psi) * H * Psi)[0,0]
+
+        self.F = lambdify([b,g], F, 'numpy')
+
+
 
     #Expectation value for an edge of degree 2
     def _fA(self, g, b):
@@ -163,6 +239,7 @@ class Graph():
         QAOA_results = simulate.result()
 
         plot_histogram(QAOA_results.get_counts(),figsize = (8,6),bar_labels = False)
+        plt.xticks(fontsize = 8)
 
         plt.savefig('Simulator_counts_1.png')
         plt.clf()
