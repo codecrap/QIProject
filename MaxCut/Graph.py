@@ -17,14 +17,14 @@ from qiskit.providers.ibmq      import least_busy
 from qiskit.tools.monitor       import job_monitor
 from qiskit.visualization import plot_histogram
 
-from sympy import Symbol, Matrix, init_printing, pprint, sin, cos, simplify, pi, zeros, lambdify
+from sympy import Symbol, Matrix, init_printing, pprint, sin, cos, simplify, pi, zeros, lambdify, ones
 from sympy.physics.quantum import TensorProduct as TP
 from sympy.physics.quantum.dagger import Dagger as Dag
 
 
 class Graph():
-    def __init__(self):
-        self.n = 6
+    def __init__(self, ):
+        self.n = 3
         self.step_size   = 0.1; #Accuracy of grid search
 
         #Simulation parameters
@@ -148,7 +148,8 @@ class Graph():
             i += 1
             B += d
 
-        Pl = Matrix([1,1,1,1,1,1,1,1])/(8**(1/2))
+        Pl = ones(2**self.n, 1)/(2**(self.n/2))
+        pprint(Pl)
 
         Eh = (-1j*g*H).exp()
         Ex = (-1j*b*B).exp()
