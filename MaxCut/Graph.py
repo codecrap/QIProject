@@ -24,7 +24,7 @@ from sympy.physics.quantum.dagger import Dagger as Dag
 
 class Graph():
     def __init__(self, ):
-        self.n = 3
+        self.n = 4
         self.step_size   = 0.1; #Accuracy of grid search
 
         #Simulation parameters
@@ -78,7 +78,7 @@ class Graph():
 
         nx.draw_networkx(self.G, node_color=colors, node_size=600, alpha=1, ax=default_axes, pos=pos)
 
-        plt.show()
+        plt.savefig('Graph.png')
         plt.clf()
 
 
@@ -149,7 +149,6 @@ class Graph():
             B += d
 
         Pl = ones(2**self.n, 1)/(2**(self.n/2))
-        pprint(Pl)
 
         Eh = (-1j*g*H).exp()
         Ex = (-1j*b*B).exp()
@@ -215,7 +214,7 @@ class Graph():
     #Draw circuit
     def Plot_C(self):
         self.QAOA.draw(output='mpl')
-        plt.show()
+        plt.savefig('Circuit.png')
         plt.clf()
 
 
