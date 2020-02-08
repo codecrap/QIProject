@@ -1,5 +1,8 @@
 from Graph import Graph
 
-G = Graph()
+#Modify file Edges.txt to introduce the edges of the graph
+G = Graph(5) #The argument is the total number of vertices of the graph
 G.Plot_G()
-G.Simulate()
+G.Optimizer(2) #The argument for Optimizer is p, the number of layers for the QAOA
+G.Plot_C()
+G.Plot_S()
