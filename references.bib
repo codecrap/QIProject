@@ -1,0 +1,111 @@
+
+@article{farhi_quantum_2014,
+	title = {A Quantum Approximate Optimization Algorithm},
+	url = {http://arxiv.org/abs/1411.4028},
+	abstract = {We introduce a quantum algorithm that produces approximate solutions for combinatorial optimization problems. The algorithm depends on a positive integer p and the quality of the approximation improves as p is increased. The quantum circuit that implements the algorithm consists of unitary gates whose locality is at most the locality of the objective function whose optimum is sought. The depth of the circuit grows linearly with p times (at worst) the number of constraints. If p is fixed, that is, independent of the input size, the algorithm makes use of efficient classical preprocessing. If p grows with the input size a different strategy is proposed. We study the algorithm as applied to {MaxCut} on regular graphs and analyze its performance on 2-regular and 3-regular graphs for fixed p. For p = 1, on 3-regular graphs the quantum algorithm always finds a cut that is at least 0.6924 times the size of the optimal cut.},
+	journaltitle = {{arXiv}:1411.4028 [quant-ph]},
+	author = {Farhi, Edward and Goldstone, Jeffrey and Gutmann, Sam},
+	urldate = {2019-11-28},
+	date = {2014-11-14},
+	eprinttype = {arxiv},
+	eprint = {1411.4028},
+	keywords = {Quantum Physics},
+	file = {arXiv Fulltext PDF:/home/redwombat/Zotero/storage/EUQ32X3C/Farhi et al. - 2014 - A Quantum Approximate Optimization Algorithm.pdf:application/pdf;arXiv.org Snapshot:/home/redwombat/Zotero/storage/JMM6BJRA/1411.html:text/html;Farhi et al. - 2014 - A Quantum Approximate Optimization Algorithm.pdf:/home/redwombat/Zotero/storage/6S4QVU3U/Farhi et al. - 2014 - A Quantum Approximate Optimization Algorithm.pdf:application/pdf;Farhi et al. - 2014 - A Quantum Approximate Optimization Algorithm.pdf:/home/redwombat/Zotero/storage/KRNP42PF/Farhi et al. - 2014 - A Quantum Approximate Optimization Algorithm.pdf:application/pdf}
+}
+
+@article{cervera-lierta_exact_2018,
+	title = {Exact Ising model simulation on a quantum computer},
+	volume = {2},
+	issn = {2521-327X},
+	url = {http://arxiv.org/abs/1807.07112},
+	doi = {10.22331/q-2018-12-21-114},
+	abstract = {We present an exact simulation of a one-dimensional transverse Ising spin chain with a quantum computer. We construct an efficient quantum circuit that diagonalizes the Ising Hamiltonian and allows to obtain all eigenstates of the model by just preparing the computational basis states. With an explicit example of that circuit for \$n=4\$ spins, we compute the expected value of the ground state magnetization, the time evolution simulation and provide a method to also simulate thermal evolution. All circuits are run in {IBM} and Rigetti quantum devices to test and compare them qualitatively.},
+	pages = {114},
+	journaltitle = {Quantum},
+	author = {Cervera-Lierta, Alba},
+	urldate = {2019-12-04},
+	date = {2018-12-21},
+	langid = {english},
+	eprinttype = {arxiv},
+	eprint = {1807.07112},
+	keywords = {Quantum Physics},
+	file = {Cervera-Lierta - 2018 - Exact Ising model simulation on a quantum computer.pdf:/home/redwombat/Zotero/storage/UJZYPHP2/Cervera-Lierta - 2018 - Exact Ising model simulation on a quantum computer.pdf:application/pdf;Cervera-Lierta - 2018 - Exact Ising model simulation on a quantum computer.pdf:/home/redwombat/Zotero/storage/Z4X3H55I/Cervera-Lierta - 2018 - Exact Ising model simulation on a quantum computer.pdf:application/pdf}
+}
+
+@article{crooks_performance_2018,
+	title = {Performance of the Quantum Approximate Optimization Algorithm on the Maximum Cut Problem},
+	url = {http://arxiv.org/abs/1811.08419},
+	abstract = {The Quantum Approximate Optimization Algorithm ({QAOA}) is a promising approach for programming a near-term gate-based hybrid quantum computer to find good approximate solutions of hard combinatorial problems. However, little is currently know about the capabilities of {QAOA}, or of the difficulty of the requisite parameters optimization. Here, we study the performance of {QAOA} on the {MaxCut} combinatorial optimization problem, optimizing the quantum circuits on a classical computer using automatic differentiation and stochastic gradient descent, using {QuantumFlow}, a quantum circuit simulator implemented with {TensorFlow}. We find that we can amortize the training cost by optimizing on batches of problems instances; that {QAOA} can exceed the performance of the classical polynomial time Goemans-Williamson algorithm with modest circuit depth, and that performance with fixed circuit depth is insensitive to problem size. Moreover, {MaxCut} {QAOA} can be efficiently implemented on a gate-based quantum computer with limited qubit connectivity, using a qubit swap network. These observations support the prospects that {QAOA} will be an effective method for solving interesting problems on near-term quantum computers.},
+	journaltitle = {{arXiv}:1811.08419 [quant-ph]},
+	author = {Crooks, Gavin E.},
+	urldate = {2019-12-04},
+	date = {2018-11-20},
+	langid = {english},
+	eprinttype = {arxiv},
+	eprint = {1811.08419},
+	keywords = {Quantum Physics},
+	file = {Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:/home/redwombat/Zotero/storage/WVENR4IS/Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:application/pdf;Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:/home/redwombat/Zotero/storage/4A7MSWKP/Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:application/pdf;Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:/home/redwombat/Zotero/storage/7JWMHNTB/Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:application/pdf;Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:/home/redwombat/Zotero/storage/E4I2QIS6/Crooks - 2018 - Performance of the Quantum Approximate Optimizatio.pdf:application/pdf}
+}
+
+@article{alam_analysis_2019,
+	title = {Analysis of Quantum Approximate Optimization Algorithm under Realistic Noise in Superconducting Qubits},
+	url = {http://arxiv.org/abs/1907.09631},
+	abstract = {The quantum approximate optimization algorithm ({QAOA}) is a promising quantum-classical hybrid technique to solve combinatorial optimization problems in near-term gate-based noisy quantum devices. In {QAOA}, the objective is a function of the quantum state, which itself is a function of the gate parameters of a multi-level parameterized quantum circuit ({PQC}). A classical optimizer varies the continuous gate parameters to generate distributions (quantum state) with signiﬁcant support to the optimal solution. Even at the lowest circuit depth, {QAOA} offers nontrivial provable performance guarantee which is expected to increase with the circuit depth. However, existing analysis fails to consider nonidealities in the qubit quality i.e., short lifetime and imperfect gate operations in realistic quantum hardware. In this article, we investigate the impact of various noise sources on the performance of {QAOA} both in simulation and on a real quantum computer from {IBM}. Our analyses indicate that optimal number of stages (p-value) for any {QAOA} instance is limited by the noise characteristics (gate error, coherence time, etc.) of the target hardware as opposed to the current perception that higherdepth {QAOA} will provide monotonically better performance for a given problem compared to the low-depth implementations.},
+	journaltitle = {{arXiv}:1907.09631 [quant-ph]},
+	author = {Alam, Mahabubul and Ash-Saki, Abdullah and Ghosh, Swaroop},
+	urldate = {2019-12-04},
+	date = {2019-07-13},
+	langid = {english},
+	eprinttype = {arxiv},
+	eprint = {1907.09631},
+	keywords = {Quantum Physics, Computer Science - Emerging Technologies},
+	file = {Alam et al. - 2019 - Analysis of Quantum Approximate Optimization Algor.pdf:/home/redwombat/Zotero/storage/UXG5CRCY/Alam et al. - 2019 - Analysis of Quantum Approximate Optimization Algor.pdf:application/pdf;Alam et al. - 2019 - Analysis of Quantum Approximate Optimization Algor.pdf:/home/redwombat/Zotero/storage/NTVUB2S4/Alam et al. - 2019 - Analysis of Quantum Approximate Optimization Algor.pdf:application/pdf}
+}
+
+@article{kandala_hardware-efficient_2017,
+	title = {Hardware-efficient variational quantum eigensolver for small molecules and quantum magnets},
+	volume = {549},
+	issn = {0028-0836, 1476-4687},
+	url = {http://www.nature.com/articles/nature23879},
+	doi = {10.1038/nature23879},
+	pages = {242--246},
+	number = {7671},
+	journaltitle = {Nature},
+	author = {Kandala, Abhinav and Mezzacapo, Antonio and Temme, Kristan and Takita, Maika and Brink, Markus and Chow, Jerry M. and Gambetta, Jay M.},
+	urldate = {2019-12-04},
+	date = {2017-09},
+	langid = {english},
+	file = {Kandala et al. - 2017 - Hardware-efficient variational quantum eigensolver.pdf:/home/redwombat/Zotero/storage/2AGIRBUU/Kandala et al. - 2017 - Hardware-efficient variational quantum eigensolver.pdf:application/pdf;Kandala et al. - 2017 - Hardware-efficient variational quantum eigensolver.pdf:/home/redwombat/Zotero/storage/UHQ3VGN3/Kandala et al. - 2017 - Hardware-efficient variational quantum eigensolver.pdf:application/pdf}
+}
+
+@article{farhi_quantum_2017,
+	title = {Quantum Algorithms for Fixed Qubit Architectures},
+	url = {http://arxiv.org/abs/1703.06199},
+	abstract = {Gate model quantum computers with too many qubits to be simulated by available classical computers are about to arrive. We present a strategy for programming these devices without error correction or compilation. This means that the number of logical qubits is the same as the number of qubits on the device. The hardware determines which pairs of qubits can be addressed by unitary operators. The goal is to build quantum states that solve computational problems such as maximizing a combinatorial objective function or minimizing a Hamiltonian. These problems may not fit naturally on the physical layout of the qubits. Our algorithms use a sequence of parameterized unitaries that sit on the qubit layout to produce quantum states depending on those parameters. Measurements of the objective function (or Hamiltonian) guide the choice of new parameters with the goal of moving the objective function up (or lowering the energy). As an example we consider finding approximate solutions to {MaxCut} on 3-regular graphs whereas the hardware is physical qubits laid out on a rectangular grid. We prove that the lowest depth version of the Quantum Approximate Optimization Algorithm will achieve an approximation ratio of at least 0.5293 on all large enough instances which beats random guessing (0.5). We open up the algorithm to have different parameters for each single qubit \$X\$ rotation and for each \${ZZ}\$ interaction associated with the nearest neighbor interactions on the grid. Small numerical experiments indicate that an enveloping classical algorithm can be used to find the parameters which sit on the grid to optimize an objective function with a different connectivity. We discuss strategies for finding good parameters but offer no evidence yet that the proposed approach can beat the best classical algorithms. Ultimately the strength of this approach will be determined by running on actual hardware.},
+	journaltitle = {{arXiv}:1703.06199 [quant-ph]},
+	author = {Farhi, E. and Goldstone, J. and Gutmann, S. and Neven, H.},
+	urldate = {2020-01-07},
+	date = {2017-03-17},
+	eprinttype = {arxiv},
+	eprint = {1703.06199},
+	keywords = {Quantum Physics},
+	file = {arXiv Fulltext PDF:/home/redwombat/Zotero/storage/KRJJJUBB/Farhi et al. - 2017 - Quantum Algorithms for Fixed Qubit Architectures.pdf:application/pdf;arXiv.org Snapshot:/home/redwombat/Zotero/storage/N23GE6K2/1703.html:text/html}
+}
+
+@article{storn_differential_1997,
+	title = {Differential Evolution – A Simple and Efficient Heuristic for global Optimization over Continuous Spaces},
+	volume = {11},
+	issn = {1573-2916},
+	url = {https://doi.org/10.1023/A:1008202821328},
+	doi = {10.1023/A:1008202821328},
+	abstract = {A new heuristic approach for minimizing possiblynonlinear and non-differentiable continuous spacefunctions is presented. By means of an extensivetestbed it is demonstrated that the new methodconverges faster and with more certainty than manyother acclaimed global optimization methods. The newmethod requires few control variables, is robust, easyto use, and lends itself very well to parallelcomputation.},
+	pages = {341--359},
+	number = {4},
+	journaltitle = {Journal of Global Optimization},
+	author = {Storn, Rainer and Price, Kenneth},
+	urldate = {2020-02-10},
+	date = {1997-12-01},
+	langid = {english},
+	keywords = {evolution strategy, genetic algorithm, global optimization, nonlinear optimization, Stochastic optimization},
+	file = {Storn - Differential Evolution – A Simple and Efﬁcient Heu.pdf:/home/redwombat/Zotero/storage/2SZNIK3G/Storn - Differential Evolution – A Simple and Efﬁcient Heu.pdf:application/pdf}
+}
