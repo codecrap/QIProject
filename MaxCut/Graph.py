@@ -29,7 +29,12 @@ class Graph():
         self.n = n
         #Simulation parameters
         self.backend      = Aer.get_backend("qasm_simulator")
-        self.shots        = 10000
+        self.shots        = 1024
+
+        # IBMQ.load_account()
+        # print(IBMQ.providers())
+        # vBackends = IBMQ.get_provider(group='open').backends()
+        # self.backend = vBackends[0] # 'ibmq_qasm_simulator'
 
         self.G = nx.Graph()
         self._Assign()
@@ -45,6 +50,8 @@ class Graph():
     #Read file with edges
     def _Read_E(self):
         x = np.genfromtxt(r'Edges.txt', delimiter=',')
+        x = np.genfromtxt(r'g9_15.txt', delimiter=',')
+
         return x
 
 
@@ -65,8 +72,9 @@ class Graph():
         bounds = []
         self.p = p
         for i in range(0,2*p):
-            bounds.append((0,10))
-        result = differential_evolution(self._Simulate, bounds)
+            bounds.append((0,2*np.pi))
+        result = differential_evolution(self._Simulate, bounds, updating='immediate')
+                                        # mutation=(0.4,1.1), tol=0.01,  maxiter=500, workers=4)
         print(result.x, -1*result.fun)
         self.F = -1*result.fun
 
@@ -133,6 +141,7 @@ class Graph():
         self._Build()
 
         simulate = execute(self.QAOA, backend=self.backend, shots=self.shots)
+        # job_monitor(simulate)
         QAOA_results = simulate.result()
         self.QAOA_results = QAOA_results
 
@@ -164,6 +173,7 @@ class Graph():
         self.max_C = max_C
         self.hist = hist
         M1_sampled   = avr_C/self.shots
+        print("beta = ", self.beta, "gamma = ", self.gamma)
 
         return -1*M1_sampled
 
@@ -184,7 +194,9 @@ class Graph():
         print('The sampled mean value is M1_sampled = %.02f' % (self.F))
         print('The approximate solution is x* = %s with C(x*) = %d \n' % (self.max_C[0],self.max_C[1]))
         print('The cost function is distributed as: \n')
+        
         plot_histogram(self.hist,figsize = (8,6),bar_labels = False)
+        plt.axvline(x=self.F, color='r')
         plt.xlabel('Vertices', fontsize = 12)
         plt.title(' Number of vertices enclosed in the subgraphs', fontsize = 20)
 
