@@ -1,0 +1,5 @@
+1.82
+
+# Error probabilities
+    self.prob_1 = 0.002  # 1-qubit gate
+    self.prob_2 = 0.08   # 2-qubit gate
