@@ -12,6 +12,7 @@ from   matplotlib.ticker import LinearLocator, FormatStrFormatter
 # importing Qiskit
 from qiskit import Aer, IBMQ
 from qiskit import QuantumRegister, ClassicalRegister, QuantumCircuit, execute
+import qiskit.providers.aer.noise as noise
 
 from qiskit.providers.ibmq      import least_busy
 from qiskit.tools.monitor       import job_monitor
@@ -27,6 +28,8 @@ from scipy.optimize import differential_evolution
 class Graph():
     def __init__(self, n):
         self.n = n
+
+
         #Simulation parameters
         self.backend      = Aer.get_backend("qasm_simulator")
         self.shots        = 10000
@@ -61,11 +64,19 @@ class Graph():
 
 
     #Optimize gamma and beta using the simulator
-    def Optimizer(self, p):
+    def Optimizer(self, p, n, *args):
         bounds = []
+        self.noise = n
         self.p = p
+        # Error probabilities
+        if self.noise:
+            self.prob_1 = args[0]  # 1-qubit gate
+            self.prob_2 = args[1]   # 2-qubit gate
+        else:
+            pass
+
         for i in range(0,2*p):
-            bounds.append((0,10))
+            bounds.append((0,2*np.pi))
         result = differential_evolution(self._Simulate, bounds)
         print(result.x, -1*result.fun)
         self.F = -1*result.fun
@@ -132,7 +143,26 @@ class Graph():
 
         self._Build()
 
-        simulate = execute(self.QAOA, backend=self.backend, shots=self.shots)
+        if self.noise:
+            # Depolarizing quantum errors
+            error_1 = noise.errors.standard_errors.depolarizing_error(self.prob_1, 1)
+            error_2 = noise.errors.standard_errors.depolarizing_error(self.prob_2, 2)
+
+            # Add errors to noise model
+            noise_model = noise.NoiseModel()
+            noise_model.add_all_qubit_quantum_error(error_1, ['u1', 'u2', 'u3'])
+            noise_model.add_all_qubit_quantum_error(error_2, ['cx'])
+            basis_gates = noise_model.basis_gates
+
+            self._Build()
+            simulate = execute(self.QAOA, backend=self.backend, shots=self.shots,
+                basis_gates=basis_gates,
+                noise_model=noise_model)
+        else:
+            self._Build()
+            simulate = execute(self.QAOA, backend=self.backend, shots=self.shots)
+            job_monitor(simulate)
+
         QAOA_results = simulate.result()
         self.QAOA_results = QAOA_results
 
@@ -177,6 +207,7 @@ class Graph():
 
         plt.suptitle('Probability to measure each subgraph', fontsize = 20)
         plt.savefig('Simulator_counts_1.png')
+        plt.xlabel('Measurement outcome')
         plt.clf()
 
 
@@ -184,9 +215,11 @@ class Graph():
         print('The sampled mean value is M1_sampled = %.02f' % (self.F))
         print('The approximate solution is x* = %s with C(x*) = %d \n' % (self.max_C[0],self.max_C[1]))
         print('The cost function is distributed as: \n')
+
         plot_histogram(self.hist,figsize = (8,6),bar_labels = False)
-        plt.xlabel('Vertices', fontsize = 12)
-        plt.title(' Number of vertices enclosed in the subgraphs', fontsize = 20)
+        plt.axvline(x=self.F, color='r')
+        plt.xlabel('Number of links', fontsize = 12)
+        plt.title(' Links cut by the subgraph', fontsize = 20)
 
         plt.savefig('Simulator_counts_2.png')
         plt.clf()
