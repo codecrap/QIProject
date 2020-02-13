@@ -42,6 +42,7 @@ class Graph():
         # print(IBMQ.providers())
         # vBackends = IBMQ.get_provider(group='open').backends()
         # self.backend = vBackends[1] # 'ibmq_qasm_simulator'
+        # print(self.backend)
 
         self.G = nx.Graph()
         self._Assign()
@@ -251,8 +252,8 @@ class Graph():
         print('The cost function is distributed as: \n')
 
         # plt.figure(figsize=figsize)
-        # plt.bar(self.hist.keys(), self.hist.items(), color='b')
-        plot_histogram(self.hist,figsize = figsize,bar_labels = False)
+        # plt.bar(self.hist.all().keys(), self.hist.all().values(), color='b')
+        plot_histogram(self.hist.all(),figsize = figsize,bar_labels = False)
         plt.axvline(x=self.F, color='r')
         plt.xlabel('Number of links', fontsize = 12)
         plt.title(' Links cut by the subgraph', fontsize = 20)
@@ -265,3 +266,30 @@ class Graph():
         print("Circuit execution time of %i calls: mean = %.2f s, total = %.2f s"
               % (len(self.vExecutionTime), np.mean(self.vExecutionTime), np.sum(self.vExecutionTime)) )
         print("Circuit called %i times" % self.nCircuitCalls)
+        
+    def plotFromSavedData(self,path):
+        (hist, mean) = np.load(path+"hist_1.npy", allow_pickle=True)
+        fig, ax = plt.subplots(figsize=(14,6))
+        ax.set_title(' Links cut by the subgraph', fontsize = 20)
+        ax.set_ylabel('Probability')
+        ax.set_xlabel('Number of links', fontsize = 12)
+        ax.bar(hist.keys(), np.array(list(hist.values()))/np.sum(list(hist.values())), color='b')
+        ax.axvline(mean, color='r')
+        ax.grid(which='major', linestyle='--', axis='y')
+        fig.savefig('hist.eps', format='eps', dpi=256)
+        plt.show()
+
+        hist = np.load(path + "counts_1.npy", allow_pickle=True)
+        fig, ax = plt.subplots(figsize=(12, 6))
+        # new_x = [1.1 * i for i in range(len(hist.all()))]
+        ax.bar(hist.all().keys(), np.array(list(hist.all().values())) / np.sum(list(hist.all().values())),
+               align='center', width=0.7, color='b')
+        # ax.set_xticks(new_x, list(hist.all().keys()) )
+        # ax.set_xticklabels(hist.all().keys())
+        ax.set_title('Probability to measure each subgraph', fontsize=20)
+        ax.set_ylabel('Probability')
+        ax.grid(which='major', linestyle='--', axis='y')
+        ax.xaxis.set_tick_params(width=0.2)
+        plt.xticks(rotation=70,fontsize=8)
+        fig.savefig('counts.eps', format='eps', dpi=256)
+        plt.show()
