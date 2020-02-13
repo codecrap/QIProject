@@ -1,6 +1,9 @@
 #import math tools
 import numpy as np
 
+import os.path
+import time
+
 # We import the tools to handle general Graphs
 import networkx as nx
 
@@ -28,16 +31,17 @@ from scipy.optimize import differential_evolution
 class Graph():
     def __init__(self, n):
         self.n = n
-
-
+        self.vExecutionTime = []
+        self.nCircuitCalls = 0
+        
         #Simulation parameters
         self.backend      = Aer.get_backend("qasm_simulator")
-        self.shots        = 1024
+        self.shots        = 2048
 
         # IBMQ.load_account()
         # print(IBMQ.providers())
         # vBackends = IBMQ.get_provider(group='open').backends()
-        # self.backend = vBackends[0] # 'ibmq_qasm_simulator'
+        # self.backend = vBackends[1] # 'ibmq_qasm_simulator'
 
         self.G = nx.Graph()
         self._Assign()
@@ -53,7 +57,8 @@ class Graph():
     #Read file with edges
     def _Read_E(self):
         # x = np.genfromtxt(r'Edges.txt', delimiter=',')
-        x = np.genfromtxt(r'g9_15.txt', delimiter=',')
+        x = np.genfromtxt(r'V9E15.txt', delimiter=',')
+        # x = np.genfromtxt(r'Butterfly.txt', delimiter=',')
 
         return x
 
@@ -66,7 +71,7 @@ class Graph():
 
         nx.draw_networkx(self.G, node_color=colors, node_size=600, alpha=1, ax=default_axes, pos=pos)
 
-        plt.savefig('Graph.png')
+        plt.savefig('Graph.eps', format='eps', dpi=256)
         plt.clf()
 
 
@@ -84,10 +89,17 @@ class Graph():
 
         for i in range(0,2*p):
             bounds.append((0,2*np.pi))
-        result = differential_evolution(self._Simulate, bounds, #updating='immediate')
-                                        mutation=(0.4,1.1), tol=0.01,  maxiter=500, workers=8)
-
-        print(result.x, -1*result.fun)
+        tDEtot0 = time.perf_counter()
+        result = differential_evolution(self._Simulate, bounds, updating='immediate',
+                                        mutation=(0.5,1), recombination=0.9, tol=1,  maxiter=500, workers=6)
+        tDEtot1 = time.perf_counter()
+        print("Total time for DE optimizer: %.2f s" % (tDEtot1-tDEtot0))
+        print("Circuit execution time of %i calls: mean = %.2f s, total = %.2f s"
+              % (len(self.vExecutionTime), np.mean(self.vExecutionTime), np.sum(self.vExecutionTime)))
+        print("Actual time spent on DE optimization: %.2f s, which is %.1f %%"
+              % ( (tDEtot1-tDEtot0)-np.sum(self.vExecutionTime), 100*((tDEtot1-tDEtot0)-np.sum(self.vExecutionTime))/(tDEtot1-tDEtot0) ) )
+        
+        print("DE optimization results: ", result.x, -1*result.fun)
         self.F = -1*result.fun
 
 
@@ -123,7 +135,7 @@ class Graph():
     #Draw circuit
     def Plot_C(self):
         self.QAOA.draw(output='mpl')
-        plt.savefig('Circuit.png')
+        plt.savefig('Circuit.eps', format='eps', dpi=256)
         plt.clf()
 
 
@@ -151,7 +163,8 @@ class Graph():
             self.gamma.append(params[2*i+1])
 
         self._Build()
-
+        
+        tExec0 = time.perf_counter()
         if self.noise:
             # Depolarizing quantum errors
             error_1 = noise.errors.standard_errors.depolarizing_error(self.prob_1, 1)
@@ -165,12 +178,16 @@ class Graph():
 
             self._Build()
             simulate = execute(self.QAOA, backend=self.backend, shots=self.shots,
-                basis_gates=basis_gates,
-                noise_model=noise_model)
+                                basis_gates=basis_gates,
+                                noise_model=noise_model)
         else:
             self._Build()
             simulate = execute(self.QAOA, backend=self.backend, shots=self.shots)
-            # job_monitor(simulate)
+        # job_monitor(simulate)
+        tExec1 = time.perf_counter()
+        self.vExecutionTime.append(tExec1-tExec0)
+        self.nCircuitCalls += 1
+        
 
         QAOA_results = simulate.result()
         self.QAOA_results = QAOA_results
@@ -209,27 +226,42 @@ class Graph():
 
 
     def Plot_S(self):
-        plot_histogram(self.QAOA_results.get_counts(),figsize = (8,6),bar_labels = False)
-        if self.n == 5:
+        # prevent files from overwriting
+        filename = "Simulator_counts_"
+        filenum = 1
+        while os.path.exists(filename + str(filenum) + ".eps"):
+            filenum += 1
+    
+        if self.n > 5:
+            figsize = (14,6)
+            plt.xticks(fontsize = 7)
+        else:
+            figsize = (8,6)
             plt.xticks(fontsize = 10)
-        elif self.n >5:
-            plt.xticks(fontsize = 8)
-
+        
+        plot_histogram(self.QAOA_results.get_counts(),figsize = figsize,bar_labels = False)
         plt.suptitle('Probability to measure each subgraph', fontsize = 20)
-        plt.savefig('Simulator_counts_1.png')
+        plt.savefig('NOISESimulator_counts_%i.eps' % filenum, format='eps', dpi=256)
         plt.xlabel('Measurement outcome')
         plt.clf()
-
-
+    
         print('\n --- SIMULATION RESULTS ---\n')
         print('The sampled mean value is M1_sampled = %.02f' % (self.F))
         print('The approximate solution is x* = %s with C(x*) = %d \n' % (self.max_C[0],self.max_C[1]))
         print('The cost function is distributed as: \n')
 
-        plot_histogram(self.hist,figsize = (8,6),bar_labels = False)
+        # plt.figure(figsize=figsize)
+        # plt.bar(self.hist.keys(), self.hist.items(), color='b')
+        plot_histogram(self.hist,figsize = figsize,bar_labels = False)
         plt.axvline(x=self.F, color='r')
         plt.xlabel('Number of links', fontsize = 12)
         plt.title(' Links cut by the subgraph', fontsize = 20)
-
-        plt.savefig('Simulator_counts_2.png')
+        plt.savefig('NOISESimulator_counts_%i.eps' % (filenum+1), format='eps', dpi=256)
         plt.clf()
+        
+        np.save("NOISEcounts_%i" % filenum, self.QAOA_results.get_counts())
+        np.save("NOISEhist_%i" % filenum, [self.hist, self.F])
+        
+        print("Circuit execution time of %i calls: mean = %.2f s, total = %.2f s"
+              % (len(self.vExecutionTime), np.mean(self.vExecutionTime), np.sum(self.vExecutionTime)) )
+        print("Circuit called %i times" % self.nCircuitCalls)
