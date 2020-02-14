@@ -1,9 +1,13 @@
-beta =  [2.2241746607736537, 3.9095143354007647, 4.027688223070769] gamma =  [2.911070613933527, 0.7776626354168834, 3.1515398322505397]
-Total time for DE optimizer: 130.00 s
-Circuit execution time of 238 calls: mean = 0.21 s, total = 49.53 s
-Actual time spent on DE optimization: 80.47 s, which is 61.9 %
-DE optimization results:  [2.22417466 2.91107061 3.90951434 0.77766264 4.02768822 3.15153982] 8.33740234375
+beta =  [3.1573375418441665, 4.748051309264886, 3.1064531042555745] gamma =  [4.97806498144649, 4.227835565270236, 3.703743821701456]
+Total time for DE optimizer: 188.50 s
+Circuit execution time of 266 calls: mean = 0.27 s, total = 72.90 s
+Actual time spent on DE optimization: 115.61 s, which is 61.3 %
+DE optimization results:  [3.15733754 4.97806498 4.74805131 4.22783557 3.1064531  3.70374381] 8.70263671875
 
  --- SIMULATION RESULTS ---
-The sampled mean value is M1_sampled = 8.34
+The sampled mean value is M1_sampled = 8.70
 The approximate solution is x* = 100111001 with C(x*) = 15
+The cost function is distributed as:
+Circuit execution time of 266 calls: mean = 0.27 s, total = 72.90 s
+Circuit called 266 times
+Total execution time: 198.04 s
