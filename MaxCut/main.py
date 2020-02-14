@@ -18,7 +18,7 @@ G.Plot_G()
 #The third and fourth arguments are optional and are the error rate of 1 and 2 qubits
 
 # G.Optimizer(2, True, 1e-3, 1e-2)
-G.Optimizer(3, False)
+G.Optimizer(3, True, 1e-3, 1e-2)
 
 G.Plot_C()
 G.Plot_S()

@@ -41,7 +41,7 @@ class Graph():
         # IBMQ.load_account()
         # print(IBMQ.providers())
         # vBackends = IBMQ.get_provider(group='open').backends()
-        # self.backend = vBackends[1] # 'ibmq_qasm_simulator'
+        # self.backend = vBackends[6] # 'ibmq_qasm_simulator'
         # print(self.backend)
 
         self.G = nx.Graph()
@@ -102,6 +102,15 @@ class Graph():
         
         print("DE optimization results: ", result.x, -1*result.fun)
         self.F = -1*result.fun
+
+        # prevent files from overwriting
+        filename = "counts_"
+        filenum = 1
+        while os.path.exists(filename + str(filenum) + ".npy"):
+            filenum += 1
+            
+        np.save("counts_%i" % filenum, self.QAOA_results.get_counts())
+        np.save("hist_%i" % filenum, [self.hist, self.F])
 
 
     #Building the circuit
@@ -230,7 +239,7 @@ class Graph():
         # prevent files from overwriting
         filename = "Simulator_counts_"
         filenum = 1
-        while os.path.exists(filename + str(filenum) + ".eps"):
+        while os.path.exists(filename + str(filenum) + ".pdf"):
             filenum += 1
     
         if self.n > 5:
@@ -242,7 +251,7 @@ class Graph():
         
         plot_histogram(self.QAOA_results.get_counts(),figsize = figsize,bar_labels = False)
         plt.suptitle('Probability to measure each subgraph', fontsize = 20)
-        plt.savefig('NOISESimulator_counts_%i.eps' % filenum, format='eps', dpi=256)
+        plt.savefig('Simulator_counts_%i.pdf' % filenum, format='pdf', dpi=256)
         plt.xlabel('Measurement outcome')
         plt.clf()
     
@@ -253,15 +262,12 @@ class Graph():
 
         # plt.figure(figsize=figsize)
         # plt.bar(self.hist.all().keys(), self.hist.all().values(), color='b')
-        plot_histogram(self.hist.all(),figsize = figsize,bar_labels = False)
+        plot_histogram(self.hist,figsize = figsize,bar_labels = False)
         plt.axvline(x=self.F, color='r')
         plt.xlabel('Number of links', fontsize = 12)
         plt.title(' Links cut by the subgraph', fontsize = 20)
-        plt.savefig('NOISESimulator_counts_%i.eps' % (filenum+1), format='eps', dpi=256)
+        plt.savefig('Simulator_counts_%i.pdf' % (filenum+1), format='pdf', dpi=256)
         plt.clf()
-        
-        np.save("NOISEcounts_%i" % filenum, self.QAOA_results.get_counts())
-        np.save("NOISEhist_%i" % filenum, [self.hist, self.F])
         
         print("Circuit execution time of %i calls: mean = %.2f s, total = %.2f s"
               % (len(self.vExecutionTime), np.mean(self.vExecutionTime), np.sum(self.vExecutionTime)) )
@@ -276,20 +282,22 @@ class Graph():
         ax.bar(hist.keys(), np.array(list(hist.values()))/np.sum(list(hist.values())), color='b')
         ax.axvline(mean, color='r')
         ax.grid(which='major', linestyle='--', axis='y')
-        fig.savefig('hist.eps', format='eps', dpi=256)
+        fig.savefig('hist.pdf', format='pdf', dpi=256)
         plt.show()
 
         hist = np.load(path + "counts_1.npy", allow_pickle=True)
         fig, ax = plt.subplots(figsize=(12, 6))
         # new_x = [1.1 * i for i in range(len(hist.all()))]
-        ax.bar(hist.all().keys(), np.array(list(hist.all().values())) / np.sum(list(hist.all().values())),
-               align='center', width=0.7, color='b')
+        # xpos = np.arange(0,len(hist.all()),1)
+        xpos = np.linspace(-10,4*len(hist.all()),len(hist.all()))
+        ax.bar(xpos, np.array(list(hist.all().values())) / np.sum(list(hist.all().values())),
+               align='center', width=4, color='b')
         # ax.set_xticks(new_x, list(hist.all().keys()) )
         # ax.set_xticklabels(hist.all().keys())
         ax.set_title('Probability to measure each subgraph', fontsize=20)
-        ax.set_ylabel('Probability')
+        ax.set_ylabel('Probability', fontsize=16)
         ax.grid(which='major', linestyle='--', axis='y')
-        ax.xaxis.set_tick_params(width=0.2)
-        plt.xticks(rotation=70,fontsize=8)
-        fig.savefig('counts.eps', format='eps', dpi=256)
+        ax.xaxis.set_tick_params(width=0.8)
+        plt.xticks(xpos[::6], list(hist.all().keys())[::6], rotation=70,fontsize=6)
+        fig.savefig('counts.pdf', format='pdf', dpi=256)
         plt.show()
