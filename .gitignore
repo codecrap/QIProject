@@ -1,5 +1,8 @@
 ### https://raw.github.com/github/gitignore/7ab549fcae8269fdd4004065470176f829d88200/Python.gitignore
 
+*.mp4
+*.mkv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

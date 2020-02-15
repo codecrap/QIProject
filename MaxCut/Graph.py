@@ -72,7 +72,7 @@ class Graph():
 
         nx.draw_networkx(self.G, node_color=colors, node_size=600, alpha=1, ax=default_axes, pos=pos)
 
-        plt.savefig('Graph.eps', format='eps', dpi=256)
+        plt.savefig('Graph.pdf', format='pdf', dpi=256)
         plt.clf()
 
 
@@ -92,7 +92,7 @@ class Graph():
             bounds.append((0,2*np.pi))
         tDEtot0 = time.perf_counter()
         result = differential_evolution(self._Simulate, bounds, updating='immediate',
-                                        mutation=(0.5,1), recombination=0.9, tol=1,  maxiter=500, workers=6)
+                                        mutation=(0.5,1), recombination=0.9, tol=0.1,  maxiter=500, workers=6)
         tDEtot1 = time.perf_counter()
         print("Total time for DE optimizer: %.2f s" % (tDEtot1-tDEtot0))
         print("Circuit execution time of %i calls: mean = %.2f s, total = %.2f s"
@@ -145,7 +145,7 @@ class Graph():
     #Draw circuit
     def Plot_C(self):
         self.QAOA.draw(output='mpl')
-        plt.savefig('Circuit.eps', format='eps', dpi=256)
+        plt.savefig('Circuit.pdf', format='pdf', dpi=256)
         plt.clf()
 
 
@@ -268,7 +268,7 @@ class Graph():
         plt.title(' Links cut by the subgraph', fontsize = 20)
         plt.savefig('Simulator_counts_%i.pdf' % (filenum+1), format='pdf', dpi=256)
         plt.clf()
-        
+    
         print("Circuit execution time of %i calls: mean = %.2f s, total = %.2f s"
               % (len(self.vExecutionTime), np.mean(self.vExecutionTime), np.sum(self.vExecutionTime)) )
         print("Circuit called %i times" % self.nCircuitCalls)
@@ -280,6 +280,8 @@ class Graph():
         ax.set_ylabel('Probability')
         ax.set_xlabel('Number of links', fontsize = 12)
         ax.bar(hist.keys(), np.array(list(hist.values()))/np.sum(list(hist.values())), color='b')
+        x = np.arange(0,len(hist.values()),1)
+        mean = np.dot(np.array(list(hist.values())), x) / np.sum(np.array(list(hist.values())))
         ax.axvline(mean, color='r')
         ax.grid(which='major', linestyle='--', axis='y')
         fig.savefig('hist.pdf', format='pdf', dpi=256)
